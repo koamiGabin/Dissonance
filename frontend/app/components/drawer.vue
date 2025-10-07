@@ -1,29 +1,71 @@
 <template>
-    <div class="drawer drawer-end">
-        <input id="right-drawer-toggle" type="checkbox" class="drawer-toggle" />
-        <div class="drawer-content">
-            <!-- Page content here -->
-            <label
-                for="right-drawer-toggle"
-                class="drawer-button btn btn-primary rounded-r-none fixed top-1/2 right-0"
-            >
-                Open drawer
-            </label>
+  <div class="fixed inset-0 flex justify-end items-center pointer-events-none">
+    <!-- Backdrop -->
+    <transition name="fade">
+      <div
+        v-if="isOpen"
+        class="fixed inset-0 bg-black/40 z-30 pointer-events-auto"
+        @click="toggleDrawer"
+      ></div>
+    </transition>
+
+    <!-- Drawer container -->
+    <transition name="slide">
+      <div
+        v-if="isOpen"
+        class="relative h-screen w-80 bg-base-200 shadow-xl pointer-events-auto flex z-40"
+      >
+        <!-- Drawer content -->
+        <div class="flex-1 p-6">
+          <h2 class="text-xl font-bold mb-4">Right Drawer</h2>
+          <p>This is your drawer content!</p>
         </div>
-        <div class="drawer-side z-40">
-            <label for="right-drawer-toggle" class="drawer-overlay"></label>
-            <div class="menu p-4 w-80 min-h-full bg-base-200 text-base-content">
-                <h2 class="text-xl font-bold mb-4">Right Drawer</h2>
-                <p>This is your drawer content!</p>
-                <button class="btn mt-4" @click="closeDrawer">Close</button>
-            </div>
+      </div>
+    </transition>
+
+    <!-- Toggle button -->
+    <button
+      class="btn btn-warning fixed top-1/2 z-50 pointer-events-auto transition-all duration-300 rounded-r-none p-4 font-mono"
+      :class="isOpen ? 'right-[20rem]' : 'right-0'"
+      @click="toggleDrawer"
+    >
+        <div :class="isOpen ? 'duration-600 rotate-180' : 'duration-600'">
+            ❮
         </div>
-    </div>
+    </button>
+  </div>
 </template>
 
-<script setup lang="ts">
-    const closeDrawer = () => {
-        const checkbox = document.getElementById('right-drawer-toggle')
-        if (checkbox) checkbox.checked = false
+<script setup>
+    import { ref } from 'vue'
+
+    const isOpen = ref(false)
+
+    const toggleDrawer = () => {
+        isOpen.value = !isOpen.value
     }
 </script>
+
+<style scoped>
+    /* Smooth slide animation */
+    .slide-enter-active,
+    .slide-leave-active {
+        transition: transform 0.3s ease;
+    }
+    .slide-enter-from {
+        transform: translateX(100%);
+    }
+    .slide-leave-to {
+        transform: translateX(100%);
+    }
+
+    /* Fade for backdrop */
+    .fade-enter-active,
+    .fade-leave-active {
+        transition: opacity 0.3s ease;
+    }
+    .fade-enter-from,
+    .fade-leave-to {
+        opacity: 0;
+    }
+</style>
