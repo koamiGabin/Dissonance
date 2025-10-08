@@ -1,0 +1,64 @@
+{
+    "title": "Dissonance",
+    "rooms": [
+        {
+            "id": 1,
+            "key": "magasin",
+            "name": "Magasin (Apple Store)",
+            "theme": "Change / consommation",
+            "narrative": "Tu explores un Apple Store où un coffre à 3 chiffres est verrouillé...",
+            "goals": [
+                "Identifier les montants",
+                "Utiliser les taux fournis",
+                "Ramener dans une même unité",
+                "Déduire un code à 3 chiffres"
+            ],
+            "puzzles": [
+                {
+                    "id": "p1-devise-coffre",
+                    "type": "DOC",
+                    "title": "Portefeuille & taux de change",
+                    "facts": {
+                        "wallet": {
+                            "USD": 20,
+                            "GBP": 200,
+                            "JPY": 200000
+                        },
+                        "rates_to_eur": {
+                            "GBP": 1.15,
+                            "USD": 0.85,
+                            "JPY": 0.00015
+                        },
+                        "target_sum_eur": 277
+                    },
+                    "hint_tiers": [
+                        "Repère ce que symbolisent les papiers et objets trouvés. Cherche un moyen de les comparer dans une même référence.",
+                        "Utilise les informations disponibles pour ramener chaque valeur dans une unité commune, puis combine-les pour obtenir une quantité unique.",
+                        "Si tu as déjà la bonne méthode, applique-la à chaque valeur trouvée et agrège le résultat ; tu obtiendras un nombre à trois chiffres."
+                    ]
+                }
+            ]
+        },
+        {
+            "id": 2,
+            "name": "Bureau",
+            "goals": [
+                "Pilulier selon ordonnance"
+            ]
+        },
+        {
+            "id": 3,
+            "name": "Usine",
+            "goals": [
+                "Tuyaux / timecard"
+            ]
+        },
+        {
+            "id": 4,
+            "name": "Mine",
+            "goals": [
+                "Ordre des minerais"
+            ]
+        }
+    ]
+}
