@@ -1,3 +1,7 @@
 <template>
-    <Navbar />
+  <div>
+    <NuxtRouteAnnouncer />
+      <Navbar />
+      <Drawer />
+  </div>
 </template>

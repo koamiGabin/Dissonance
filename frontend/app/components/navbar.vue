@@ -1,7 +1,7 @@
 <template>
     <div class="navbar bg-base-100 shadow-sm">
         <div class="flex-1">
-            <NuxtLink to="/" class="btn btn-ghost font-press text-xl">Dissonance</NuxtLink>
+            <NuxtLink to="/" class="btn btn-ghost font-press text-2xl">Dissonance</NuxtLink>
         </div>
         <div class="flex-none">
             <ul class="menu menu-horizontal px-1">

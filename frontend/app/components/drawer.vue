@@ -13,7 +13,7 @@
     <transition name="slide">
       <div
         v-show="isOpen"
-        class="relative h-screen w-120 bg-base-200 shadow-xl pointer-events-auto flex z-40"
+        class="relative h-screen w-120 bg-base-200 pointer-events-auto z-40"
       >
         <Chat />        
       </div>

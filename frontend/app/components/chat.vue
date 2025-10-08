@@ -1,26 +1,21 @@
 <template>
-  <div class="p-6">
-    <h1 class="text-xl font-bold mb-4">Lobby {{ lobbyId }}</h1>
+  <div class="p-8 overflow-y-auto h-screen">
+    <h1 class="text-xl font-bold mb-4">Lobby {{ lobby }}</h1>
 
-    <div class="space-y-2 mb-4">
-
-        <div
-            v-for="(msg, i) in messages"
-            :key="i"
-            :class= "msg.sender == 'player 1' ? 'chat chat-start' : 'chat chat-end'"
-        >
-          <div class="chat-header">
-            {{ msg.sender }}
-          </div>
-          <div class="chat-bubble chat-bubble-secondary">
-            {{ msg.message }}
-          </div>
-        </div>
+    <div class="mb-4">
+      <div
+        v-for="(msg, i) in messages"
+        :key="i"
+        :class="msg.sender === player ? 'chat chat-end' : 'chat chat-start'"
+      >
+        <div class="chat-header">{{ msg.sender }}</div>
+        <div class="chat-bubble text-sm" :class="msg.sender === player ? 'chat-bubble-secondary' : 'chat-bubble-warning'">{{ msg.message }}</div>
+      </div>
     </div>
 
     <input
       v-model="input"
-      @keyup.enter="send()"
+      @keyup.enter="send"
       placeholder="Type message..."
       class="input input-bordered w-full"
     />
@@ -28,30 +23,40 @@
 </template>
 
 <script setup lang="ts">
+import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { useSocket } from '~/composables/useSocket'
+import { useStorage } from '@vueuse/core'
 
-    import { ref, onMounted } from 'vue'
-    import { useSocket } from '~/composables/useSocket'
+const { connect, joinLobby, sendMessage, onMessage, onHistory } = useSocket()
 
-    const { connect, sendMessage, onMessage, joinLobby, onHistory } = useSocket()
+const lobby = useStorage('lobby', '')
+const input = ref('')
+const player = useStorage('nickname', '')
+const messages = ref<{ sender: string; message: string }[]>([])
 
-    const lobbyId = 'escape-room-42'
-    const input = ref('')
-    let playerRandom = 'player 1'
-    const messages = ref<{ sender: string; message: string }[]>([])
+onMounted(() => {
+  connect()
+  joinLobby(lobby.value)
 
-    onMounted(() => {
-      connect()
-      joinLobby(lobbyId)
+  // Load previous history
+  onHistory((history) => {
+    messages.value = history
+  })
 
-      onHistory((history) => messages.value = history)
-      onMessage((data) => messages.value.push(data))  
-    })
+  // Listen for new messages
+  onMessage((data) => {
+    messages.value.push(data)
+  })
+})
 
-    const send = () => {
-        if (!input.value.trim()) return
-        sendMessage(playerRandom, input.value)
-        input.value = ''
-        playerRandom == 'player 1'? playerRandom = 'player 2' : playerRandom = 'player 1'
-    }
+onBeforeUnmount(() => {
+  // Optional cleanup if you want to fully disconnect when leaving the component
+  // socket.value?.disconnect()
+})
 
+const send = () => {
+  if (!input.value.trim()) return
+  sendMessage(player.value, input.value)
+  input.value = ''
+}
 </script>

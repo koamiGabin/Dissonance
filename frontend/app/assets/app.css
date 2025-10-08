@@ -8,3 +8,7 @@
 @plugin "daisyui" {
     themes: dark --default, cyberpunk, cupcake, valentine, halloween;
 };
+
+.btn-neutral {
+    background-color: #4a2131;
+}
