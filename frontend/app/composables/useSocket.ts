@@ -1,38 +1,31 @@
-import { io, type Socket } from 'socket.io-client'
-import { ref, onUnmounted } from 'vue'
+import { io, Socket } from 'socket.io-client'
+import { ref } from 'vue'
 
-export const useSocket = () => {
-  const socket = ref<Socket | null>(null)
+const socket = ref<Socket | null>(null)
 
+export function useSocket() {
   const connect = () => {
-    socket.value = io('/socket.io', { transports: ['websocket'] })
+    socket.value = io('http://localhost:3001', { transports: ['websocket'] })
 
     socket.value.on('connect', () => {
-      console.log('Connected to Socket.IO', socket.value?.id)
+      console.log('✅ Connected to Socket.IO as', socket.value?.id)
+      onMessage((data) => console.log('📩 Received:', data))
+    })
+
+    socket.value.on('connect_error', (err) => {
+      console.error('❌ Connection error:', err.message)
     })
   }
 
-  const joinLobby = (lobbyId: string) => {
-    console.log("ON ESSAYE DE JOIN")
-    socket.value?.emit('join-lobby', lobbyId)
-  }
-
-  const sendMessage = (lobbyId: string, message: string) => {
-    console.log({
-      msg: "Jenvoie un msg ta",
-      lobbyId: lobbyId,
-      message: message
-    })
-    socket.value?.emit('send-message', { lobbyId, message })
+  const sendMessage = (player: string, message: string) => {
+    socket.value?.emit('send-message', { player, message })
   }
 
   const onMessage = (callback: (data: any) => void) => {
+    console.log("we got something here")
     socket.value?.on('receive-message', callback)
   }
 
-  onUnmounted(() => {
-    socket.value?.disconnect()
-  })
 
-  return { socket, connect, joinLobby, sendMessage, onMessage }
+  return { connect, socket, sendMessage, onMessage }
 }
