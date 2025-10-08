@@ -9,8 +9,10 @@ export default defineNuxtConfig({
     experimental:{
       websocket:true
     },
-    preset: 'netlify'
+    preset: 'static',
+
   },
+  ssr:true,
 
   vite: {
     plugins: [tailwindcss()],
