@@ -34,7 +34,8 @@ let playerRandom = 'player 1'
 const messages = ref<{ sender: string; message: string }[]>([])
 
 onMounted(() => {
-  connect()
+  console.log("fuck off : ", lobbyId)
+  connect(lobbyId)
   onMessage((data) => messages.value.push(data))
 })
 

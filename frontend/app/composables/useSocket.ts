@@ -21,11 +21,21 @@ export function useSocket() {
     socket.value?.emit('send-message', { player, message })
   }
 
-  const onMessage = (callback: (data: any) => void) => {
-    console.log("we got something here")
-    socket.value?.on('receive-message', callback)
+  const joinLobby = (lobbyId: string) => {
+    console.log("we emit a joinLobby : ", lobbyId)
+    socket.value?.emit("join-lobby", lobbyId)
   }
 
 
-  return { connect, socket, sendMessage, onMessage }
+  const onMessage = (callback: (data: any) => void) => {
+    socket.value?.on('receive-message', callback)
+  }
+
+  const onHistory = (callback: (history: any[]) => void) => {
+    console.log("we are getting the histo yo")
+    socket.value?.on("chat-history", callback)
+  }
+
+
+  return { connect, socket, sendMessage, onMessage, joinLobby, onHistory }
 }

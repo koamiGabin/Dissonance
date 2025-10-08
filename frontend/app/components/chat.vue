@@ -7,9 +7,14 @@
         <div
             v-for="(msg, i) in messages"
             :key="i"
-            :class= "msg.sender == 'player 1' ? 'p-2 bg-base-200 rounded' : 'p-2 bg-base-200 rounded text-right'"
+            :class= "msg.sender == 'player 1' ? 'chat chat-start' : 'chat chat-end'"
         >
-            <strong>{{ msg.sender }}</strong>: {{ msg.message }}
+          <div class="chat-header">
+            {{ msg.sender }}
+          </div>
+          <div class="chat-bubble chat-bubble-secondary">
+            {{ msg.message }}
+          </div>
         </div>
     </div>
 
@@ -27,7 +32,7 @@
     import { ref, onMounted } from 'vue'
     import { useSocket } from '~/composables/useSocket'
 
-    const { connect, sendMessage, onMessage } = useSocket()
+    const { connect, sendMessage, onMessage, joinLobby, onHistory } = useSocket()
 
     const lobbyId = 'escape-room-42'
     const input = ref('')
@@ -35,8 +40,11 @@
     const messages = ref<{ sender: string; message: string }[]>([])
 
     onMounted(() => {
-        connect()
-        onMessage((data) => messages.value.push(data))
+      connect()
+      joinLobby(lobbyId)
+
+      onHistory((history) => messages.value = history)
+      onMessage((data) => messages.value.push(data))  
     })
 
     const send = () => {
